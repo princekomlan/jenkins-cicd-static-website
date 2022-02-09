@@ -3,13 +3,13 @@
 
 pipeline {
     environment {
-        IMAGE_NAME = "staticwebsite"
-        APP_CONTAINER_PORT: "5000"
-        APP_EXPOSED_PORT: "80"
-        IMAGE_TAG = "latest"
-        STAGING = "chocoapp-staging"
-        PRODUCTION = "chocoapp-prod"
-        DOCKERHUB_ID = "choco1992"
+        "IMAGE_NAME = staticwebsite"
+        "APP_CONTAINER_PORT: 5000"
+        "APP_EXPOSED_PORT: 80"
+        "IMAGE_TAG = latest"
+        "STAGING = chocoapp-staging"
+        "PRODUCTION = chocoapp-prod"
+        "DOCKERHUB_ID = choco1992"
     }
     agent none
     stages {
