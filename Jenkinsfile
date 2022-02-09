@@ -37,7 +37,7 @@ pipeline {
            steps {
               script {
                 sh '''
-                   curl localhost | grep -q "Dimension"
+                   curl localhost | grep -i "Dimension"
                 '''
               }
            }
