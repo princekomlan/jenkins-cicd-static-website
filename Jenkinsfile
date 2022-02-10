@@ -75,7 +75,7 @@ pipeline {
         }
 /*        agent any */
 	agent {
-        	docker { image 'alpine' }
+        	docker { image 'franela/dind' }
 	}
 
         environment {
