@@ -40,7 +40,7 @@ pipeline {
            steps {
               script {
                 sh '''
-                   curl 172.17.0.1 | grep -i "Dimension"
+                   curl localhost | grep -i "Dimension"
                 '''
               }
            }
@@ -73,18 +73,13 @@ pipeline {
         when {
             expression { GIT_BRANCH == 'origin/main' }
         }
-	agent {
-        	docker { image 'franela/dind' }
-	}
-
+	agent any 
         environment {
             HEROKU_API_KEY = credentials('heroku_api_key')
         }
         steps {
            script {
              sh '''
-                apk --no-cache add npm
-                npm install -g heroku
                 heroku container:login
                 heroku create $STAGING || echo "projets already exist"
                 heroku container:push -a $STAGING web
@@ -97,17 +92,13 @@ pipeline {
        when {
            expression { GIT_BRANCH == 'origin/main' }
        }
-	agent {
-        	docker { image 'franela/dind' }
-	}
+	agent any
        environment {
            HEROKU_API_KEY = credentials('heroku_api_key')
        }
        steps {
           script {
             sh '''
-               apk --no-cache add npm
-               npm install -g heroku
                heroku container:login
                heroku create $PRODUCTION || echo "projets already exist"
                heroku container:push -a $PRODUCTION web
