@@ -26,8 +26,8 @@ jobs:
     steps:
       - name: Check out the codebase.
         uses: actions/checkout@v2
-        with:
-          path: 'workdir-staticwebsite'
+#        with:
+#          path: 'workdir-staticwebsite'
       - name: Build Image
         run: | 
           docker build -t ${ID_DOCKER}/$IMAGE_NAME:$IMAGE_TAG .
