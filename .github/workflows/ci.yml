@@ -11,8 +11,8 @@ env:
   ID_DOCKER: "choco1992"
   IMAGE_NAME: "staticwebsite"
   IMAGE_TAG: "latest"
-  STAGING: ${ID_DOCKER}-staging
-  PRODUCTION: ${ID_DOCKER}-production
+#  STAGING: ${ID_DOCKER}-staging
+#  PRODUCTION: ${ID_DOCKER}-production
   APP_CONTAINER_PORT: "80"
   APP_EXPOSED_PORT: "80"
 
@@ -55,9 +55,11 @@ jobs:
       #    echo ${{ secrets.DOCKERHUB_PASSWORD }} | docker login -u $ID_DOCKER --password-stdin
       #    docker push ${ID_DOCKER}/$IMAGE_NAME:$IMAGE_TAG
         
-      - name: Install Heroku CLI
+      - name: Install and configure Heroku CLI
         run: | 
           sudo apt install nodejs
+          echo "STAGING=${ID_DOCKER}-staging" >> $GITHUB_ENV
+          echo "PRODUCTION=${ID_DOCKER}-production" >> $GITHUB_ENV
       
       - name: Deploy Staging
         env:
