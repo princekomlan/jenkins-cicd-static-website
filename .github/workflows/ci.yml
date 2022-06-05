@@ -31,13 +31,13 @@ jobs:
       - name: Build Image
         run: | 
           docker build -t ${ID_DOCKER}/$IMAGE_NAME:$IMAGE_TAG .
-          docker save ${ID_DOCKER}/$IMAGE_NAME:$IMAGE_TAG > $IMAGE_NAME.tar
+          docker save ${ID_DOCKER}/$IMAGE_NAME:$IMAGE_TAG > $IMAGE_NAME
           echo "IMAGE_NAME=staticwebsite" >> $GITHUB_ENV
       - name: Upload workspace from job build
         uses: actions/upload-artifact@v3
         with:
           name: image
-          path: ${IMAGE_NAME}.tar
+          path: $IMAGE_NAME
           retention-days: 2
 
   run-and-test:
