@@ -31,13 +31,13 @@ jobs:
       - name: Build Image
         run: | 
           docker build -t ${ID_DOCKER}/$IMAGE_NAME:$IMAGE_TAG .
-          docker save ${ID_DOCKER}/$IMAGE_NAME:$IMAGE_TAG > $IMAGE_NAME:$IMAGE_TAG.tar
+          docker save ${ID_DOCKER}/$IMAGE_NAME:$IMAGE_TAG > $IMAGE_NAME.tar
       
       - name: Upload image builded from job build
         uses: actions/upload-artifact@v3
         with:
           name: docker_image
-          path: $IMAGE_NAME:$IMAGE_TAG.tar          
+          path: $IMAGE_NAME.tar          
       
       - name: Upload workspace from job build
         uses: actions/upload-artifact@v3
@@ -64,7 +64,7 @@ jobs:
           pwd
           ls -larth
           docker images
-          docker load < ${ID_DOCKER}/$IMAGE_NAME:$IMAGE_TAG.tar
+          docker load < $IMAGE_NAME.tar
           docker run --name $IMAGE_NAME -d -p ${APP_EXPOSED_PORT}:${APP_CONTAINER_PORT} -e PORT=$APP_CONTAINER_PORT ${ID_DOCKER}/$IMAGE_NAME:$IMAGE_TAG
           sleep 5
 
