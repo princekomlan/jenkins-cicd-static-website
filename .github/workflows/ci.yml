@@ -54,6 +54,10 @@ jobs:
           echo ${{ secrets.DOCKERHUB_PASSWORD }} | docker login -u $ID_DOCKER --password-stdin
           docker push ${ID_DOCKER}/$IMAGE_NAME:$IMAGE_TAG
       
+      - name: List workdir
+        run: ls -lart
+          
+      
       - name: Deploy Staging
         uses: akhileshns/heroku-deploy@v3.12.12
         with:
