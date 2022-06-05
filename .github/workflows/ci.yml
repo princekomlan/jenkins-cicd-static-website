@@ -49,13 +49,14 @@ jobs:
           docker stop $IMAGE_NAME
           docker rm $IMAGE_NAME
 
-      - name: Login and Push Image on docker hub
-        run: |
-          echo ${{ secrets.DOCKERHUB_PASSWORD }} | docker login -u $ID_DOCKER --password-stdin
-          docker push ${ID_DOCKER}/$IMAGE_NAME:$IMAGE_TAG
+      #- name: Login and Push Image on docker hub
+      #  run: |
+      #    echo ${{ secrets.DOCKERHUB_PASSWORD }} | docker login -u $ID_DOCKER --password-stdin
+      #    docker push ${ID_DOCKER}/$IMAGE_NAME:$IMAGE_TAG
       
       - name: List workdir
         run: | 
+          git log --pretty=oneline
           echo workdir is $(pwd)
           echo -e listing workdir : \n $(ls -lart)
           
