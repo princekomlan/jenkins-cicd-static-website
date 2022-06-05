@@ -39,7 +39,7 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: image
-          path: {{IMAGE_NAME}}
+          path: ${{ IMAGE_NAME }}
           retention-days: 2
 
   run-and-test:
