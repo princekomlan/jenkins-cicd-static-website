@@ -33,6 +33,7 @@ jobs:
 
   run-and-test:
     name: RUN AND TEST CONTAINER
+    needs: build
     runs-on: ubuntu-latest
     steps:    
       - name: Run container based on builded image
@@ -44,7 +45,8 @@ jobs:
         run: curl http://172.17.0.1:${APP_EXPOSED_PORT} | grep -i "Dimension"
 
   clean:
-    name: CLEAN TEST CONTAINER
+    name: CLEAN TEST 
+    needs: run-and-test
     runs-on: ubuntu-latest
     steps:    
       - name: Clean Container
@@ -54,6 +56,7 @@ jobs:
 
   push:
     name: PUSH IMAGE ON DOCKERHUB
+    needs: clean
     runs-on: ubuntu-latest
     steps:    
       - name: Login and Push Image on docker hub
@@ -63,6 +66,7 @@ jobs:
         
   deploy:
     name: DEPLOY APPLICATION
+    needs: push
     runs-on: ubuntu-latest
     steps:            
       - name: Install and configure Heroku CLI
