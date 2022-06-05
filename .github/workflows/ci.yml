@@ -32,8 +32,6 @@ jobs:
         run: | 
           docker build -t ${ID_DOCKER}/$IMAGE_NAME:$IMAGE_TAG .
           docker save ${ID_DOCKER}/$IMAGE_NAME:$IMAGE_TAG > $IMAGE_NAME
-          pwd
-          ls -larth
           echo "IMAGE_NAME=staticwebsite" >> $GITHUB_ENV
       - name: Upload workspace from job build
         uses: actions/upload-artifact@v3
@@ -51,18 +49,6 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: image
-      - name: DEBUGGING
-        run: |          
-          echo "DEBUG"
-          pwd
-          ls -larth
-          echo ls parent
-          cd .. && pwd
-          ls -larth 
-          echo ls parent parent
-          cd ../.. && pwd
-          ls -larth
-          docker images          
       - name: Run container based on builded image
         run: |
           docker load < $IMAGE_NAME
@@ -72,11 +58,6 @@ jobs:
       - name: Test image.
         run: curl http://172.17.0.1:${APP_EXPOSED_PORT} | grep -i "Dimension"
 
-  clean:
-    name: CLEAN TEST 
-    needs: run-and-test
-    runs-on: ubuntu-latest
-    steps:    
       - name: Clean Container
         run: |
           docker stop $IMAGE_NAME
@@ -84,19 +65,34 @@ jobs:
 
   push:
     name: PUSH IMAGE ON DOCKERHUB
-    needs: clean
+    needs: run-and-test
     runs-on: ubuntu-latest
     steps:    
+      - name: Download workspace from job build
+        uses: actions/download-artifact@v3
+        with:
+          name: image    
       - name: Login and Push Image on docker hub
         run: |
+          docker load < $IMAGE_NAME
+          echo debug current 
+          pwd
+          ls -larth
+          echo debug parent
+          ls -larth ..
+          echo debug parent parent
+          ls -larth ../..
           echo ${{ secrets.DOCKERHUB_PASSWORD }} | docker login -u $ID_DOCKER --password-stdin
-          docker push ${ID_DOCKER}/$IMAGE_NAME:$IMAGE_TAG
+          docker push ${ID_DOCKER}/$IMAGE_NAME:$
+          
         
   deploy:
     name: DEPLOY APPLICATION
     needs: push
     runs-on: ubuntu-latest
-    steps:            
+    steps:  
+      - name: Check out the codebase.
+        uses: actions/checkout@v2              
       - name: Install and configure Heroku CLI
         run: | 
           sudo apt install nodejs
