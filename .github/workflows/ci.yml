@@ -75,13 +75,6 @@ jobs:
       - name: Login and Push Image on docker hub
         run: |
           docker load < $IMAGE_NAME
-          echo debug current 
-          pwd
-          ls -larth
-          echo debug parent
-          ls -larth ..
-          echo debug parent parent
-          ls -larth ../..
           echo ${{ secrets.DOCKERHUB_PASSWORD }} | docker login -u $ID_DOCKER --password-stdin
           docker push ${ID_DOCKER}/$IMAGE_NAME:$IMAGE_TAG          
         
