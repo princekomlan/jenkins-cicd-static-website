@@ -31,13 +31,13 @@ jobs:
       - name: Build Image
         run: | 
           docker build -t ${ID_DOCKER}/$IMAGE_NAME:$IMAGE_TAG .
-          docker save ${ID_DOCKER}/$IMAGE_NAME:$IMAGE_TAG > ${ID_DOCKER}/$IMAGE_NAME:$IMAGE_TAG.tar
+          docker save ${ID_DOCKER}/$IMAGE_NAME:$IMAGE_TAG > $IMAGE_NAME:$IMAGE_TAG.tar
       
       - name: Upload image builded from job build
         uses: actions/upload-artifact@v3
         with:
           name: docker_image
-          path: ${ID_DOCKER}/$IMAGE_NAME:$IMAGE_TAG.tar          
+          path: $IMAGE_NAME:$IMAGE_TAG.tar          
       
       - name: Upload workspace from job build
         uses: actions/upload-artifact@v3
