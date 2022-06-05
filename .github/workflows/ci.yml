@@ -1,0 +1,63 @@
+---
+name: static-website
+'on':
+  pull_request:
+  push:
+    branches:
+      - main
+  schedule:
+    - cron: "0 2 * * *"
+env:
+  ID_DOCKER: "choco1992"
+  IMAGE_NAME: "staticwebsite"
+  IMAGE_TAG: "latest"
+  STAGING: "${ID_DOCKER}-staging"
+  PRODUCTION: "${ID_DOCKER}-production" 
+  APP_CONTAINER_PORT: "80"
+  APP_EXPOSED_PORT: "80"
+  HEROKU_EMAIL: "ulrich_nathan@yahoo.fr"
+defaults:
+  run:
+    working-directory: 'workdir-staticwebsite'
+
+jobs:
+  job-alpinehelloworld:
+    name: CICD staticwebsite
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out the codebase.
+        uses: actions/checkout@v2
+        with:
+          path: 'workdir-staticwebsite'
+
+      - name: Build Image
+        run: docker build -t ${ID_DOCKER}/$IMAGE_NAME:$IMAGE_TAG .
+
+      - name: Run container based on builded image
+        run: |
+          docker run --name $IMAGE_NAME -d -p ${APP_EXPOSED_PORT}:${APP_CONTAINER_PORT} -e PORT=$APP_CONTAINER_PORT ${ID_DOCKER}/$IMAGE_NAME:$IMAGE_TAG
+          sleep 5
+          echo adresse ip  : $(ip a)
+
+      - name: Test image.
+        run: curl http://172.17.0.1:${APP_EXPOSED_PORT} | grep -i "Dimension"
+
+
+      - name: Clean Container
+        run: |
+          docker stop $IMAGE_NAME
+          docker rm $IMAGE_NAME
+
+      - name: Login and Push Image on docker hub
+        run: |
+          echo ${{ secrets.DOCKERHUB_PASSWORD }} | docker login -u $ID_DOCKER --password-stdin
+          docker push ${ID_DOCKER}/$IMAGE_NAME:$IMAGE_TAG
+      
+      - name: Deploy Staging
+        uses: akhileshns/heroku-deploy@v3.12.12
+        with:
+          heroku_api_key: ${{secrets.HEROKU_API_KEY}}
+          heroku_app_name: $STAGING 
+          heroku_email: $HEROKU_EMAIL
+          usedocker: true          
