@@ -32,28 +32,18 @@ jobs:
         run: | 
           docker build -t ${ID_DOCKER}/$IMAGE_NAME:$IMAGE_TAG .
           docker save ${ID_DOCKER}/$IMAGE_NAME:$IMAGE_TAG > $IMAGE_NAME.tar
-      
-      - name: Upload image builded from job build
-        uses: actions/upload-artifact@v3
-        with:
-          name: docker_image
-          path: $IMAGE_NAME.tar          
-      
       - name: Upload workspace from job build
         uses: actions/upload-artifact@v3
         with:
           name: workspace
           path: workdir-staticwebsite
+          retention-days: 2
 
   run-and-test:
     name: RUN AND TEST CONTAINER
     needs: build
     runs-on: ubuntu-latest
     steps:  
-      - name: Download image from job build
-        uses: actions/download-artifact@v3
-        with:
-          name: docker_image      
       - name: Download workspace from job build
         uses: actions/download-artifact@v3
         with:
