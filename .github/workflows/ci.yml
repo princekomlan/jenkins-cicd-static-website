@@ -32,6 +32,8 @@ jobs:
         run: | 
           docker build -t ${ID_DOCKER}/$IMAGE_NAME:$IMAGE_TAG .
           docker save ${ID_DOCKER}/$IMAGE_NAME:$IMAGE_TAG > $IMAGE_NAME
+          pwd
+          ls -larth
           echo "IMAGE_NAME=staticwebsite" >> $GITHUB_ENV
       - name: Upload workspace from job build
         uses: actions/upload-artifact@v3
