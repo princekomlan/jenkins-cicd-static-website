@@ -55,7 +55,9 @@ jobs:
           docker push ${ID_DOCKER}/$IMAGE_NAME:$IMAGE_TAG
       
       - name: List workdir
-        run: ls -lart
+        run: | 
+          echo workdir is $(pwd)
+          echo -e listing workdir : \n $(ls -lart)
           
       
       - name: Deploy Staging
