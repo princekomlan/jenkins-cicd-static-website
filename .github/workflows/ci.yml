@@ -15,9 +15,9 @@ env:
   APP_EXPOSED_PORT: "80"
 
 
-defaults:
-  run:
-    working-directory: 'workdir-staticwebsite'
+#defaults:
+#  run:
+#    working-directory: 'workdir-staticwebsite'
 
 jobs:
   build:
