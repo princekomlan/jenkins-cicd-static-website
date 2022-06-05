@@ -35,8 +35,8 @@ jobs:
       - name: Upload workspace from job build
         uses: actions/upload-artifact@v3
         with:
-          name: workspace
-          path: workdir-staticwebsite
+          name: image
+          path: ${IMAGE_NAME}.tar
           retention-days: 2
 
   run-and-test:
@@ -47,7 +47,7 @@ jobs:
       - name: Download workspace from job build
         uses: actions/download-artifact@v3
         with:
-          name: workspace
+          name: image
       - name: DEBUGGING
         run: |          
           echo "DEBUG"
