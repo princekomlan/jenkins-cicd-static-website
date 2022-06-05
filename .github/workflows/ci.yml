@@ -53,19 +53,15 @@ jobs:
       #  run: |
       #    echo ${{ secrets.DOCKERHUB_PASSWORD }} | docker login -u $ID_DOCKER --password-stdin
       #    docker push ${ID_DOCKER}/$IMAGE_NAME:$IMAGE_TAG
-      
-      - name: List workdir
+        
+      - name: Install Heroku CLI
         run: | 
-          git log --pretty=oneline
-          echo workdir is $(pwd)
-          echo -e listing workdir : \n $(ls -lart)
-          
+          sudo apt install nodejs
+          npm install -g heroku   
       
       - name: Deploy Staging
-        uses: akhileshns/heroku-deploy@v3.12.12
-        with:
-          heroku_api_key: ${{secrets.HEROKU_API_KEY}}
-          heroku_app_name: $STAGING 
-          heroku_email: $HEROKU_EMAIL
-          branch: main
-          usedocker: true          
+        run: | 
+          heroku container:login
+          heroku create ${STAGING}  || echo "project already exist"
+          heroku container:push -a ${STAGING} web
+          heroku container:release -a ${STAGING} web    
