@@ -11,8 +11,8 @@ env:
   ID_DOCKER: "choco1992"
   IMAGE_NAME: "staticwebsite"
   IMAGE_TAG: "latest"
-  STAGING: "${ID_DOCKER}-staging"
-  PRODUCTION: "${ID_DOCKER}-production" 
+  STAGING: ${ID_DOCKER}-staging
+  PRODUCTION: ${ID_DOCKER}-production
   APP_CONTAINER_PORT: "80"
   APP_EXPOSED_PORT: "80"
 
@@ -61,7 +61,6 @@ jobs:
       
       - name: Deploy Staging
         env:
-          HEROKU_EMAIL: "ulrich_nathan@yahoo.fr"
           HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
         run: | 
           heroku container:login
