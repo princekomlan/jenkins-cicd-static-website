@@ -29,19 +29,42 @@ jobs:
         with:
           path: 'workdir-staticwebsite'
       - name: Build Image
-        run: docker build -t ${ID_DOCKER}/$IMAGE_NAME:$IMAGE_TAG .
+        run: | 
+          docker build -t ${ID_DOCKER}/$IMAGE_NAME:$IMAGE_TAG .
+          docker save ${ID_DOCKER}/$IMAGE_NAME:$IMAGE_TAG > ${ID_DOCKER}/$IMAGE_NAME:$IMAGE_TAG.tar
+      
+      - name: Upload image builded from job build
+        uses: actions/upload-artifact@v3
+        with:
+          name: docker_image
+          path: ${ID_DOCKER}/$IMAGE_NAME:$IMAGE_TAG.tar          
+      
+      - name: Upload workspace from job build
+        uses: actions/upload-artifact@v3
+        with:
+          name: workspace
+          path: workdir-staticwebsite
 
   run-and-test:
     name: RUN AND TEST CONTAINER
     needs: build
     runs-on: ubuntu-latest
-    steps:    
+    steps:  
+      - name: Download image from job build
+        uses: actions/download-artifact@v3
+        with:
+          name: docker_image      
+      - name: Download workspace from job build
+        uses: actions/download-artifact@v3
+        with:
+          name: workspace
       - name: Run container based on builded image
         run: |
           echo "DEBUG"
           pwd
           ls -larth
           docker images
+          docker load < ${ID_DOCKER}/$IMAGE_NAME:$IMAGE_TAG.tar
           docker run --name $IMAGE_NAME -d -p ${APP_EXPOSED_PORT}:${APP_CONTAINER_PORT} -e PORT=$APP_CONTAINER_PORT ${ID_DOCKER}/$IMAGE_NAME:$IMAGE_TAG
           sleep 5
 
