@@ -15,7 +15,8 @@ env:
   PRODUCTION: "${ID_DOCKER}-production" 
   APP_CONTAINER_PORT: "80"
   APP_EXPOSED_PORT: "80"
-  HEROKU_EMAIL: "ulrich_nathan@yahoo.fr"
+
+
 defaults:
   run:
     working-directory: 'workdir-staticwebsite'
@@ -54,20 +55,16 @@ jobs:
       #    echo ${{ secrets.DOCKERHUB_PASSWORD }} | docker login -u $ID_DOCKER --password-stdin
       #    docker push ${ID_DOCKER}/$IMAGE_NAME:$IMAGE_TAG
         
-      #- name: Install Heroku CLI
-      #  run: | 
-      #    sudo apt install nodejs
+      - name: Install Heroku CLI
+        run: | 
+          sudo apt install nodejs
       
-      #- name: Deploy Staging
-      #  run: | 
-      #    heroku container:login
-      #    heroku create ${STAGING}  || echo "project already exist"
-      #    heroku container:push -a ${STAGING} web
-      #    heroku container:release -a ${STAGING} web    
-      - name: Deploy Staging with githu action
-        uses: akhileshns/heroku-deploy@v3.12.12
-        with:
-          heroku_api_key: ${{secrets.HEROKU_API_KEY}}
-          heroku_app_name: $STAGING 
-          heroku_email: $HEROKU_EMAIL
-          usedocker: true 
+      - name: Deploy Staging
+        env:
+          HEROKU_EMAIL: "ulrich_nathan@yahoo.fr"
+          HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
+        run: | 
+          heroku container:login
+          heroku create ${STAGING}  || echo "project already exist"
+          heroku container:push -a ${STAGING} web
+          heroku container:release -a ${STAGING} web    
