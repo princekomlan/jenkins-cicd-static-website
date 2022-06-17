@@ -6,8 +6,8 @@ name: static-website
     branches:
       - main
       - test-cache
-  schedule:
-    - cron: "0 2 * * *"
+#  schedule:
+#    - cron: "0 2 * * *"
 env:
   ID_DOCKER: "choco1992"
   IMAGE_NAME: "staticwebsite"
