@@ -9,8 +9,8 @@ pipeline {
         IMAGE_TAG = "latest"
         STAGING = "chocoapp-jenkins-staging"
         PRODUCTION = "chocoapp-jenkins-prod"
-        DOCKERHUB_ID = "choco1992"
-        DOCKERHUB_PASSWORD = credentials('dockerhub_password')
+        DOCKERHUB_ID = "princekomlan"
+        DOCKERHUB_PASSWORD = credentials('dockerhubpassword')
     }
     agent none
     stages {
@@ -108,11 +108,11 @@ pipeline {
        }
      }
   }
-  post {
+/*  post {
      always {
        script {
          slackNotifier currentBuild.result
      }
     }
-  }
+  }*/
 }
